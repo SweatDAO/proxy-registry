@@ -7,6 +7,9 @@ contract ProxyRegistry {
     mapping(address => DSProxy) public proxies;
     DSProxyFactory factory;
 
+    // --- Events ---
+    event Build(address usr, address proxy);
+
     constructor(address factory_) public {
         factory = DSProxyFactory(factory_);
     }
@@ -15,6 +18,7 @@ contract ProxyRegistry {
     // sets owner of proxy to caller
     function build() public returns (address payable proxy) {
         proxy = build(msg.sender);
+        emit Build(msg.sender, proxy);
     }
 
     // deploys a new proxy instance
@@ -23,5 +27,6 @@ contract ProxyRegistry {
         require(proxies[owner] == DSProxy(0) || proxies[owner].owner() != owner); // Not allow new proxy if the user already has one and remains being the owner
         proxy = factory.build(owner);
         proxies[owner] = DSProxy(proxy);
+        emit Build(owner, proxy);
     }
 }
