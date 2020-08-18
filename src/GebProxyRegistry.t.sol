@@ -2,18 +2,18 @@ pragma solidity >=0.6.7;
 
 import "ds-test/test.sol";
 
-import "./ProxyRegistry.sol";
+import "./GebProxyRegistry.sol";
 
-contract ProxyRegistryTest is DSTest {
-    ProxyRegistry registry;
+contract GebProxyRegistryTest is DSTest {
+    GebProxyRegistry registry;
     DSProxyFactory factory;
 
     function setUp() public {
         factory = new DSProxyFactory();
-        registry = new ProxyRegistry(address(factory));
+        registry = new GebProxyRegistry(address(factory));
     }
 
-    function test_ProxyRegistryBuild() public {
+    function test_geb_proxy_registry_build() public {
 		address payable proxyAddr = registry.build();
 		assertTrue(proxyAddr != address(0));
 		DSProxy proxy = DSProxy(proxyAddr);
@@ -34,7 +34,7 @@ contract ProxyRegistryTest is DSTest {
 		assertEq(address(registry.proxies(address(this))), proxyAddr);
 	}
 
-	function test_ProxyRegistryBuildOtherOwner() public {
+	function test_geb_proxy_registry_build_other_owner() public {
 		address owner = address(0x123);
 		address payable proxyAddr = registry.build(owner);
 		assertTrue(proxyAddr != address(0));
@@ -56,7 +56,7 @@ contract ProxyRegistryTest is DSTest {
 		assertEq(address(registry.proxies(owner)), address(proxy));
 	}
 
-	function test_ProxyRegistryCreateNewProxy() public {
+	function test_geb_proxy_registry_create_new_proxy() public {
 		address payable proxyAddr = registry.build();
 		assertTrue(proxyAddr != address(0));
 		assertEq(proxyAddr, address(registry.proxies(address(this))));
@@ -66,12 +66,12 @@ contract ProxyRegistryTest is DSTest {
 		assertEq(proxyAddr2, address(registry.proxies(address(this))));
 	}
 
-	function testFail_ProxyRegistryCreateNewProxy() public {
+	function testFail_geb_proxy_registry_create_new_proxy() public {
 		registry.build();
 		registry.build();
 	}
 
-	function testFail_ProxyRegistryCreateNewProxy2() public {
+	function testFail_geb_proxy_registry_create_new_proxy2() public {
 		address owner = address(0x123);
 		registry.build(owner);
 		registry.build(owner);
